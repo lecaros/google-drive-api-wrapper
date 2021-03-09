@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.4.31"
+    id("maven-publish")
 }
 
 group = "com.merkenlabs.googleapiwrapper.drive"
