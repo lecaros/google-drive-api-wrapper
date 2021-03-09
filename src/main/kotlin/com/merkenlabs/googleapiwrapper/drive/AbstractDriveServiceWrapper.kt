@@ -3,13 +3,9 @@ package com.merkenlabs.googleapiwrapper.drive
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 
-abstract class AbstractDriveServiceWrapper {
+abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
-    /**
-     * Recursively copies all subfolders and files from one folder to another.
-     *
-     */
-    fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String) {
+    override fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String) {
         val foundFiles = getFilesInFolder(originFolderId)
         if (foundFiles != null) {
             for (file in foundFiles) {
@@ -35,7 +31,7 @@ abstract class AbstractDriveServiceWrapper {
         return newFile
     }
 
-    private fun getFilesInFolder(originFolderId: String): List<File>? {
+    override fun getFilesInFolder(originFolderId: String): List<File>? {
         val fileList = getDriveService().files().list()
             .setQ("'$originFolderId' in parents")
             .setFields("files(id, name, mimeType)")
@@ -45,11 +41,11 @@ abstract class AbstractDriveServiceWrapper {
         return foundFiles
     }
 
-    fun getFolder(folderId: String): Drive.Files.Get {
+    override fun getFolder(folderId: String): Drive.Files.Get {
         return getDriveService().files().get(folderId)
     }
 
-    fun createFolder(mainFolderId: String, name: String): File {
+    override fun createFolder(mainFolderId: String, name: String): File {
         val foundFolder = findFolderByName(name, mainFolderId)
         if (!foundFolder.isNullOrEmpty()) {
             return foundFolder
@@ -59,7 +55,7 @@ abstract class AbstractDriveServiceWrapper {
         return getDriveService().files().create(newFolder).setFields("id, parents").execute()
     }
 
-    private fun findFolderByName(name: String, mainFolderId: String): File? {
+    override fun findFolderByName(name: String, mainFolderId: String): File? {
         val fileList = getDriveService().files().list()
             .setQ("mimeType='${MimeTypes.FOLDER}' and name = '$name' and trashed = false and '$mainFolderId' in parents")
             .execute()
@@ -68,8 +64,6 @@ abstract class AbstractDriveServiceWrapper {
         }
         return fileList.files.first()
     }
-
-    abstract fun getDriveService(): Drive
 
     object MimeTypes {
         const val FOLDER = "application/vnd.google-apps.folder"
