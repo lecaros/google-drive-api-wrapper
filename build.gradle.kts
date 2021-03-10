@@ -32,6 +32,10 @@ tasks.getByName<Jar>("jar") {
     enabled = true
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing{
     publications {
         create<MavenPublication>("google-drive-api-wrapper") {
