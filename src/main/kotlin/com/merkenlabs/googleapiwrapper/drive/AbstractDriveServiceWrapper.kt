@@ -66,6 +66,7 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     }
 
     object MimeTypes {
+        // As defined in https://developers.google.com/drive/api/v3/mime-types
         const val FOLDER = "application/vnd.google-apps.folder"
         const val SPREADSHEET = "application/vnd.google-apps.spreadsheet"
         const val DOCUMENT = "application/vnd.google-apps.document"
