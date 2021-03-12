@@ -17,7 +17,7 @@ dependencies {
     implementation( "org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("com.google.apis:google-api-services-drive:v3-rev20210207-1.31.0")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20210228-1.31.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
