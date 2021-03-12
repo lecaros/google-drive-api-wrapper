@@ -22,6 +22,9 @@ override fun getDriveService(): Drive {
 * Gets a list of files inside a folder. Only first level children.
 * Find a folder by name inside a parent folder.
 
+## To-Do
+* Read responses to control execution.
+
 ## Versions
 ### 0.1.0
 * Allows to recursively copy all elements from a folder to another by their ids.
