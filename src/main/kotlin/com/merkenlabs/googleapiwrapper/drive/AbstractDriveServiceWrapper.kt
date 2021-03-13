@@ -2,18 +2,17 @@ package com.merkenlabs.googleapiwrapper.drive
 
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
+import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTypes.FOLDER
 
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String) {
         val foundFiles = getFilesInFolder(originFolderId)
-        if (foundFiles != null) {
-            for (file in foundFiles) {
-                if (file.mimeType.equals(MimeTypes.FOLDER)) {
-                    val newFolder = createFolder(destinationFolderId, file.name)
-                    copyFolderContentsIntoFolder(file.id, newFolder.id)
-                    continue
-                }
+        foundFiles?.forEach { file ->
+            if (file.mimeType.equals(FOLDER)) {
+                val newFolder = createFolder(destinationFolderId, file.name)
+                copyFolderContentsIntoFolder(file.id, newFolder.id)
+            } else {
                 val newFile = createNewFileWithAttributes(file, destinationFolderId)
                 val copyFileRequest = getDriveService().files().copy(file.id, newFile)
                 copyFileRequest.execute()
