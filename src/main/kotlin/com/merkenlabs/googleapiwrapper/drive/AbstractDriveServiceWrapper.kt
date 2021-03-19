@@ -7,17 +7,26 @@ import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTyp
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String) {
-        val foundFiles = getFilesInFolder(originFolderId)
-        foundFiles?.forEach { file ->
-            if (file.mimeType.equals(FOLDER)) {
-                val newFolder = createFolder(destinationFolderId, file.name)
-                copyFolderContentsIntoFolder(file.id, newFolder.id)
-            } else {
-                val newFile = createNewFileWithAttributes(file, destinationFolderId)
-                val copyFileRequest = getDriveService().files().copy(file.id, newFile)
-                copyFileRequest.execute()
+        getFilesInFolder(originFolderId)?.forEach { file ->
+            when (file.mimeType) {
+                FOLDER -> {
+                    val newFolder = createFolder(destinationFolderId, file.name)
+                    copyFolderContentsIntoFolder(file.id, newFolder.id)
+                }
+                else -> {
+                    val newFile = createNewFileWithAttributes(file, destinationFolderId)
+                    copyFile(file, newFile)
+                }
             }
         }
+    }
+
+    private fun copyFile(
+        originFile: File,
+        newFile: File
+    ) {
+        val copyFileRequest = getDriveService().files().copy(originFile.id, newFile)
+        copyFileRequest.execute()
     }
 
     private fun createNewFileWithAttributes(
@@ -35,9 +44,7 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
             .setQ("'$originFolderId' in parents")
             .setFields("files(id, name, mimeType)")
             .execute()
-        val foundFiles = fileList.files
-        foundFiles.sortBy { it.name }
-        return foundFiles
+        return fileList.files
     }
 
     override fun getFolder(folderId: String): Drive.Files.Get {
@@ -46,22 +53,17 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun createFolder(mainFolderId: String, name: String): File {
         val foundFolder = findFolderByName(name, mainFolderId)
-        if (!foundFolder.isNullOrEmpty()) {
-            return foundFolder
-        }
+        foundFolder?.let { return it }
         val newFolder =
-            File().setName(name).setMimeType(MimeTypes.FOLDER).setParents(listOf(mainFolderId))
+            File().setName(name).setMimeType(FOLDER).setParents(listOf(mainFolderId))
         return getDriveService().files().create(newFolder).setFields("id, parents").execute()
     }
 
     override fun findFolderByName(name: String, mainFolderId: String): File? {
         val fileList = getDriveService().files().list()
-            .setQ("mimeType='${MimeTypes.FOLDER}' and name = '$name' and trashed = false and '$mainFolderId' in parents")
+            .setQ("mimeType='${FOLDER}' and name = '$name' and trashed = false and '$mainFolderId' in parents")
             .execute()
-        if (fileList.files.isNullOrEmpty()) {
-            return null
-        }
-        return fileList.files.first()
+        return fileList.files.firstOrNull()
     }
 
     object MimeTypes {
