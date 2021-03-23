@@ -1,6 +1,5 @@
 package com.merkenlabs.googleapiwrapper.drive
 
-import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTypes.FOLDER
 
@@ -14,19 +13,23 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
                     copyFolderContentsIntoFolder(file.id, newFolder.id)
                 }
                 else -> {
-                    val newFile = createNewFileWithAttributes(file, destinationFolderId)
-                    copyFile(file, newFile)
+                    copyFile(file, destinationFolderId)
                 }
             }
         }
     }
 
-    private fun copyFile(
+    override fun copyFile(originFile: File, destinationFolderId: String): File? {
+        val newFile = createNewFileWithAttributes(originFile, destinationFolderId)
+        return copyFileToFile(originFile, newFile)
+    }
+
+    private fun copyFileToFile(
         originFile: File,
         newFile: File
-    ) {
+    ): File? {
         val copyFileRequest = getDriveService().files().copy(originFile.id, newFile)
-        copyFileRequest.execute()
+        return copyFileRequest.execute()
     }
 
     private fun createNewFileWithAttributes(
