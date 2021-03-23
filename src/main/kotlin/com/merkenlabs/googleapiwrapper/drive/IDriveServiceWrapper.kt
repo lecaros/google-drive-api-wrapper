@@ -10,7 +10,7 @@ interface IDriveServiceWrapper {
      */
     fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String)
     fun getFilesInFolder(originFolderId: String): List<File>?
-    fun getFolder(folderId: String): Drive.Files.Get
+    fun getFolder(folderId: String): File?
     fun createFolder(mainFolderId: String, name: String): File
     fun findFolderByName(name: String, mainFolderId: String): File?
     fun getDriveService(): Drive

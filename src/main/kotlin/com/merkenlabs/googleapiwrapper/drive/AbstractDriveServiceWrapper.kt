@@ -47,8 +47,8 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
         return fileList.files
     }
 
-    override fun getFolder(folderId: String): Drive.Files.Get {
-        return getDriveService().files().get(folderId)
+    override fun getFolder(folderId: String): File? {
+        return getDriveService().files().get(folderId).execute()
     }
 
     override fun createFolder(mainFolderId: String, name: String): File {
