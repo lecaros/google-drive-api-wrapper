@@ -1,5 +1,6 @@
 package com.merkenlabs.googleapiwrapper.drive
 
+import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTypes.FOLDER
 
@@ -68,6 +69,8 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
             .execute()
         return fileList.files.firstOrNull()
     }
+
+    protected abstract fun getDriveService(): Drive
 
     object MimeTypes {
         // As defined in https://developers.google.com/drive/api/v3/mime-types
