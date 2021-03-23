@@ -20,24 +20,24 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     }
 
     override fun copyFile(originFile: File, destinationFolderId: String): File? {
-        val newFile = createNewFileWithAttributes(originFile, destinationFolderId)
+        val newFile = prepareNewFileForCopy(originFile, destinationFolderId)
         return copyFileToFile(originFile, newFile)
     }
 
     private fun copyFileToFile(
         originFile: File,
-        newFile: File
+        destinationFile: File
     ): File? {
-        val copyFileRequest = getDriveService().files().copy(originFile.id, newFile)
+        val copyFileRequest = getDriveService().files().copy(originFile.id, destinationFile)
         return copyFileRequest.execute()
     }
 
-    private fun createNewFileWithAttributes(
-        file: File,
+    private fun prepareNewFileForCopy(
+        originFile: File,
         destinationFolderId: String
     ): File {
         val newFile = File()
-        newFile.name = file.name
+        newFile.name = originFile.name
         newFile.parents = listOf(destinationFolderId)
         return newFile
     }
