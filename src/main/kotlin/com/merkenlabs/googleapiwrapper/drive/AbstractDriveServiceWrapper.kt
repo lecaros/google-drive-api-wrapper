@@ -52,7 +52,7 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun getFilesInFolder(originFolderId: String): List<File>? {
         val fileList = getDriveService().files().list()
-            .setQ("'$originFolderId' in parents")
+            .setQ("'$originFolderId' in parents and trashed = false")
             .setFields("files(id, name, mimeType)")
             .execute()
         return fileList.files
@@ -60,7 +60,7 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun getFilesInFolderByMimeType(folderId: String, mimeType: String): List<File>?{
         val fileList = getDriveService().files().list()
-            .setQ("'$folderId' in parents and mimeType = '$mimeType'")
+            .setQ("'$folderId' in parents and mimeType = '$mimeType' and trashed = false")
             .setFields("files(id, name, mimeType)")
             .execute()
         return fileList.files
