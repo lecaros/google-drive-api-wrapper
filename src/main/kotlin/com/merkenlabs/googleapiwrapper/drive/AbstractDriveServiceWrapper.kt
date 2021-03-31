@@ -9,7 +9,7 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     override fun copyFolderStructureIntoFolder(originFolderId: String, destinationFolderId: String) {
         getFilesInFolderByMimeType(originFolderId, FOLDER)?.forEach { file ->
                 val newFolder = createFolder(destinationFolderId, file.name)
-                copyFolderContentsIntoFolder(file.id, newFolder.id)
+                copyFolderStructureIntoFolder(file.id, newFolder.id)
         }
     }
 
