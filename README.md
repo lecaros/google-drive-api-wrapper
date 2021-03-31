@@ -21,11 +21,16 @@ override fun getDriveService(): Drive {
 * Allows creation of a folder with a name and parent folder id.
 * Gets a list of files inside a folder. Only first level children.
 * Find a folder by name inside a parent folder.
+* Copy full folder structure without files.
+* Get a list of files inside a folder by its MimeType.
 
 ## To-Do
 * Read responses to control execution.
 
 ## Versions
+### 0.2.0
+* Allows to copy a full folder structure.
+* Add method to get files in a folder given its MimeType
 ### 0.1.0
 * Allows to recursively copy all elements from a folder to another by their ids.
 * Allows creation of a folder with a name and parent folder id.
