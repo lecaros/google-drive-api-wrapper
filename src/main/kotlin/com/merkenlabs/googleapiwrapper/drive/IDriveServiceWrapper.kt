@@ -9,7 +9,9 @@ interface IDriveServiceWrapper {
      *
      */
     fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String)
+    fun copyFolderStructureIntoFolder(originFolderId: String, destinationFolderId: String)
     fun getFilesInFolder(originFolderId: String): List<File>?
+    fun getFilesInFolderByMimeType(folderId: String, mimeType: String): List<File>?
     fun getFolder(folderId: String): File?
     fun createFolder(mainFolderId: String, name: String): File
     fun findFolderByName(name: String, mainFolderId: String): File?

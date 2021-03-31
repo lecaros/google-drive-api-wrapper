@@ -6,6 +6,13 @@ import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTyp
 
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
+    override fun copyFolderStructureIntoFolder(originFolderId: String, destinationFolderId: String) {
+        getFilesInFolderByMimeType(originFolderId, FOLDER)?.forEach { file ->
+                val newFolder = createFolder(destinationFolderId, file.name)
+                copyFolderContentsIntoFolder(file.id, newFolder.id)
+        }
+    }
+
     override fun copyFolderContentsIntoFolder(originFolderId: String, destinationFolderId: String) {
         getFilesInFolder(originFolderId)?.forEach { file ->
             when (file.mimeType) {
@@ -46,6 +53,14 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     override fun getFilesInFolder(originFolderId: String): List<File>? {
         val fileList = getDriveService().files().list()
             .setQ("'$originFolderId' in parents")
+            .setFields("files(id, name, mimeType)")
+            .execute()
+        return fileList.files
+    }
+
+    override fun getFilesInFolderByMimeType(folderId: String, mimeType: String): List<File>?{
+        val fileList = getDriveService().files().list()
+            .setQ("'$folderId' in parents and mimeType = '$mimeType'")
             .setFields("files(id, name, mimeType)")
             .execute()
         return fileList.files
