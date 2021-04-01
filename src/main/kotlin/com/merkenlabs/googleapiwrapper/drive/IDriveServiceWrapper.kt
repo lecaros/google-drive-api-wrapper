@@ -15,6 +15,7 @@ interface IDriveServiceWrapper {
     fun getFolder(folderId: String): File?
     fun createFolder(mainFolderId: String, name: String): File
     fun findFolderByName(name: String, mainFolderId: String): File?
+    fun findFilenameByUrl(url: String): String
     /**
     * Returns the new File.
      **/
