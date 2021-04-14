@@ -103,9 +103,13 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     }
 
     override fun findFilenameByUrl(url: String): String {
-        val idFromUrl = url.split("google.com")[1].split("/")[3]
-        val file = getDriveService().files().get(idFromUrl).execute()
+        val file = getFileFromUrl(url)
         return file.name
+    }
+
+    override fun getFileFromUrl(url: String): File {
+        val idFromUrl = url.split("google.com")[1].split("/")[3]
+        return getDriveService().files().get(idFromUrl).execute()
     }
 
     protected abstract fun getDriveService(): Drive
