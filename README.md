@@ -24,11 +24,14 @@ override fun getDriveService(): Drive {
 * Copy full folder structure without files.
 * Get a list of files inside a folder by its MimeType.
 * Get file's name by its URL.
+* Export/download a file.
     
 ## To-Do
 * Read responses to control execution.
 
 ## Versions
+### 0.3.0
+* Export/download a file.
 ### 0.2.0
 * Allows to copy a full folder structure.
 * Add method to get files in a folder given its MimeType.

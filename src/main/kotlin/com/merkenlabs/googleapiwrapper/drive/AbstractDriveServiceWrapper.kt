@@ -3,6 +3,8 @@ package com.merkenlabs.googleapiwrapper.drive
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTypes.FOLDER
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
@@ -30,6 +32,21 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     override fun copyFile(originFile: File, destinationFolderId: String): File? {
         val newFile = prepareNewFileForCopy(originFile, destinationFolderId)
         return copyFileToFile(originFile, newFile)
+    }
+
+    override fun exportFileAs(fileId: String, fileMimeType: String): java.io.File {
+        val outputStream = ByteArrayOutputStream()
+        getDriveService().files().export(fileId, fileMimeType)
+            .executeMediaAndDownloadTo(outputStream)
+        writeToFileSystem(fileId, outputStream)
+        return java.io.File(fileId)
+    }
+
+    private fun writeToFileSystem(fileId: String, outputStream: ByteArrayOutputStream) {
+        val file = FileOutputStream(fileId)
+        outputStream.writeTo(file)
+        outputStream.close()
+        file.close()
     }
 
     private fun copyFileToFile(
@@ -99,5 +116,6 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
         const val SPREADSHEET = "application/vnd.google-apps.spreadsheet"
         const val DOCUMENT = "application/vnd.google-apps.document"
         const val PRESENTATION = "application/vnd.google-apps.presentation"
+        const val PDF = "application/pdf"
     }
 }

@@ -1,7 +1,7 @@
 package com.merkenlabs.googleapiwrapper.drive
 
-import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
+import java.io.File as FSFile
 
 interface IDriveServiceWrapper {
     /**
@@ -20,4 +20,5 @@ interface IDriveServiceWrapper {
     * Returns the new File.
      **/
     fun copyFile(originFile: File, destinationFolderId: String): File?
+    fun exportFileAs(fileId: String, fileMimeType: String): FSFile
 }
