@@ -20,6 +20,6 @@ interface IDriveServiceWrapper {
     * Returns the new File.
      **/
     fun copyFile(originFile: File, destinationFolderId: String): File?
-    fun exportFileAs(fileId: String, fileMimeType: String): FSFile
+    fun exportFileAs(fileId: String, fileMimeType: String, fileName: String?): FSFile
     fun getFileFromUrl(url: String): File?
 }

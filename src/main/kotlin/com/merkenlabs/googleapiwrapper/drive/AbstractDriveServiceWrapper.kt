@@ -34,12 +34,12 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
         return copyFileToFile(originFile, newFile)
     }
 
-    override fun exportFileAs(fileId: String, fileMimeType: String): java.io.File {
+    override fun exportFileAs(fileId: String, fileMimeType: String, fileName: String?): java.io.File {
         val outputStream = ByteArrayOutputStream()
         getDriveService().files().export(fileId, fileMimeType)
             .executeMediaAndDownloadTo(outputStream)
-        writeToFileSystem(fileId, outputStream)
-        return java.io.File(fileId)
+        writeToFileSystem(fileName?:fileId, outputStream)
+        return java.io.File(fileName?:fileId)
     }
 
     private fun writeToFileSystem(fileId: String, outputStream: ByteArrayOutputStream) {
