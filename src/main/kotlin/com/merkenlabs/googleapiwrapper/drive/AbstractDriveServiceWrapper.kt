@@ -3,6 +3,8 @@ package com.merkenlabs.googleapiwrapper.drive
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.merkenlabs.googleapiwrapper.drive.AbstractDriveServiceWrapper.MimeTypes.FOLDER
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
@@ -30,6 +32,21 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     override fun copyFile(originFile: File, destinationFolderId: String): File? {
         val newFile = prepareNewFileForCopy(originFile, destinationFolderId)
         return copyFileToFile(originFile, newFile)
+    }
+
+    override fun exportFileAs(fileId: String, fileMimeType: String, fileName: String?): java.io.File {
+        val outputStream = ByteArrayOutputStream()
+        getDriveService().files().export(fileId, fileMimeType)
+            .executeMediaAndDownloadTo(outputStream)
+        writeToFileSystem(fileName?:fileId, outputStream)
+        return java.io.File(fileName?:fileId)
+    }
+
+    private fun writeToFileSystem(fileId: String, outputStream: ByteArrayOutputStream) {
+        val file = FileOutputStream(fileId)
+        outputStream.writeTo(file)
+        outputStream.close()
+        file.close()
     }
 
     private fun copyFileToFile(
@@ -86,9 +103,13 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
     }
 
     override fun findFilenameByUrl(url: String): String {
-        val idFromUrl = url.split("google.com")[1].split("/")[3]
-        val file = getDriveService().files().get(idFromUrl).execute()
+        val file = getFileFromUrl(url)
         return file.name
+    }
+
+    override fun getFileFromUrl(url: String): File {
+        val idFromUrl = url.split("google.com")[1].split("/")[3]
+        return getDriveService().files().get(idFromUrl).execute()
     }
 
     protected abstract fun getDriveService(): Drive
@@ -99,5 +120,6 @@ abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
         const val SPREADSHEET = "application/vnd.google-apps.spreadsheet"
         const val DOCUMENT = "application/vnd.google-apps.document"
         const val PRESENTATION = "application/vnd.google-apps.presentation"
+        const val PDF = "application/pdf"
     }
 }

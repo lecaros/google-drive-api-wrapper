@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.merkenlabs.googleapiwrapper.drive"
-version = "0.2.0"
+version = "0.3.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -40,6 +40,18 @@ publishing{
     publications {
         create<MavenPublication>("google-drive-api-wrapper") {
             from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri(System.getenv("MVN_REPO_URL"))
+            credentials {
+                username = System.getenv("MVN_REPO_USER")
+                password = System.getenv("MVN_REPO_PWD")
+            }
+            authentication {
+                create<org.gradle.authentication.http.BasicAuthentication>("basic")
+            }
         }
     }
 }
