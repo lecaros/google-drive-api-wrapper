@@ -8,6 +8,10 @@ import java.io.FileOutputStream
 
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
+    override fun deleteFileById(fileId: String) {
+        getDriveService().files().delete(fileId)
+    }
+
     override fun copyFolderStructureIntoFolder(originFolderId: String, destinationFolderId: String) {
         getFilesInFolderByMimeType(originFolderId, FOLDER)?.forEach { file ->
                 val newFolder = createFolder(destinationFolderId, file.name)
