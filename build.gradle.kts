@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.merkenlabs.googleapiwrapper.drive"
-version = "0.3.0"
+version = "0.4.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -17,7 +17,7 @@ dependencies {
     implementation( "org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("com.google.apis:google-api-services-drive:v3-rev20210315-1.31.0")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20220110-1.32.1")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
