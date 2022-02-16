@@ -9,7 +9,7 @@ import java.io.FileOutputStream
 abstract class AbstractDriveServiceWrapper : IDriveServiceWrapper {
 
     override fun deleteFileById(fileId: String) {
-        getDriveService().files().delete(fileId)
+        getDriveService().files().delete(fileId).execute()
     }
 
     override fun copyFolderStructureIntoFolder(originFolderId: String, destinationFolderId: String) {
